@@ -9,7 +9,7 @@ import (
 	"github.com/milvus-io/milvus-sdk-go/v2/client"
 	"github.com/milvus-io/milvus-sdk-go/v2/entity"
 	"github.com/tmc/langchaingo/embeddings"
-	"github.com/tmc/langchaingo/llms/openai"
+	"github.com/tmc/langchaingo/llms/ollama"
 	"github.com/tmc/langchaingo/schema"
 
 	"github.com/tmc/langchaingo/vectorstores"
@@ -17,8 +17,8 @@ import (
 )
 
 const (
-	poolSize = 5
-	baseURL  = "http://localhost:5500"
+	poolSize = 4
+	baseURL  = "http://192.168.17.92:11434"
 )
 
 func main() {
@@ -30,10 +30,11 @@ func main() {
 }
 
 func newStore() (vectorstores.VectorStore, error) {
-	llm, err := openai.New(openai.WithBaseURL(baseURL))
+	llm, err := ollama.New(ollama.WithServerURL(baseURL), ollama.WithModel("deepseek-r1:70b"))
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	embedder, err := embeddings.NewEmbedder(llm)
 	if err != nil {
 		log.Fatal(err)
